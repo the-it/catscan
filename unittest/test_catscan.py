@@ -156,4 +156,5 @@ class TestCatScan(TestCase):
         httpretty.register_uri(httpretty.GET,
                                'http://tools.wmflabs.org/catscan2/catscan2.php?language=de&project=wikisource&categories=Autoren&get_q=1&show_redirects=no&ns[0]=1&max_age=48&format=json&doit=1',
                                status=404)
-        self.assertRaises(ConnectionError)
+        with self.assertRaises(ConnectionError):
+            self.catscan.run()
