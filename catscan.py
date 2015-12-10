@@ -49,7 +49,7 @@ class CatScan:
         self.header = {'User-Agent': 'Python-urllib/3.1'}
         self.base_address = "http://tools.wmflabs.org/catscan2/catscan2.php"
         self.timeout = 30
-        self._options = {}
+        self.options = {}
         self.categories = {"positive": [], "negative": []}
         self.templates = {'yes': [], 'any': [], 'no': []}
         self.outlinks = {'yes': [], 'any': [], 'no': []}
@@ -57,45 +57,89 @@ class CatScan:
         self.project = "wikisource"
 
     def __str__(self):
+        """
+        Returns the ready constructed Searchstring for the catscan query.
+
+        @return: Searchstring
+        @rtype: str
+        """
         return self._construct_string()
 
     def set_language(self, lang):
+        """
+        Set the language of the wiki.
+        @param lang: language
+        @type lang: str
+        """
         self.language = lang
 
     def set_project(self, proj):
+        """
+        Set the project of the wiki (examples: wikisource, wikipedia).
+        @param proj: project
+        @type proj: str
+        """
         self.project = proj
 
     def set_timeout(self, sec):
+        """
+        Set the timeout of the query.
+        @param sec: seconds
+        @type sec: int
+        """
         self.timeout = sec
 
     def set_logic(self, log_and = None, log_or = None):
+        """
+        Set the logic connection between the categories.
+        @param log_and: connects (True) the categories with an and statement or not (False)
+        @type log_and: bool
+        @param log_or: connects (True) the categories with an or statement or not (False)
+        @type log_or: bool
+        """
         if log_and and log_or:
             self.add_options({"comb[subset]": "1", "comb[union]": "1"})
         elif log_or:
             self.add_options({"comb[union]": "1"})
 
     def add_options(self, dict_options):
-        self._options.update(dict_options)
+        """
+        Add new options to self._options.
+        @param dict_options: dictionary with new options
+        @type dict_options: dict
+        """
+        self.options.update(dict_options)
 
     def set_depth(self, depth):
         """
-            Defines the search depth for the query.
-
-            :param depth: Count of subcategories that will be searched.
-            """
+        Defines the search depth for the query.
+        @param depth: Count of subcategories that will be searched
+        @type depth: int
+        """
         self.add_options({"depth":depth})
 
     def add_positive_category(self, category):
         """
-        Add category to the positive list
-        :param category: string with the category name
+        Add category to the positive list.
+        @param category: string with the category name
+        @type category: str
         """
         self.categories["positive"].append(category)
 
     def add_negative_category(self, category):
+        """
+        Add category to the negative list.
+        @param category: string with the category name
+        @type category: str
+        """
         self.categories["negative"].append(category)
 
     def add_namespace(self, namespace):
+        """
+        Add (a) namespace(s) to the options.
+        @param namespace: string or integer with a new namespace (a list of namespaces is possible)
+        @type namespace: str|int|list
+        """
         # is there a list to process or only a single instance
         namespace = listify(namespace)
         for i in namespace:
@@ -106,54 +150,140 @@ class CatScan:
                 self.add_options({"ns[" + str(namespace_mapping[i]) + "]": "1"})
 
     def activate_redirects(self):
+        """
+        Activate redirects in the result.
+        """
         self.add_options({"show_redirects": "yes"})
 
     def deactivate_redirects(self):
+        """
+        Deactivate redirects in the result.
+        """
         self.add_options({"show_redirects": "no"})
 
     def add_yes_template(self, template):
+        """
+        Add template to the yes list.
+        @param template: string with the template name
+        @type template: str
+        """
         self.templates['yes'].append(template)
 
     def add_any_template(self, template):
+        """
+        Add template to the any list.
+        @param template: string with the template name
+        @type template: str
+        """
         self.templates['any'].append(template)
 
     def add_no_template(self, template):
+        """
+        Add template to the no list.
+        @param template: string with the template name
+        @type template: str
+        """
         self.templates['no'].append(template)
 
     def add_yes_outlink(self, outlink):
+        """
+        Add an outlink to the yes list.
+        @param outlink: string with the outlink name
+        @type outlink: str
+        """
         self.outlinks['yes'].append(outlink)
 
     def add_any_outlink(self, outlink):
+        """
+        Add an outlink to the any list.
+        @param outlink: string with the outlink name
+        @type outlink: str
+        """
         self.outlinks['any'].append(outlink)
 
     def add_no_outlink(self, outlink):
+        """
+        Add an outlink to the no list.
+        @param outlink: string with the outlink name
+        @type outlink: str
+        """
         self.outlinks['no'].append(outlink)
 
     def last_change_before(self, year, month=1, day=1, hour=0, minute=0, second=0):
+        """
+        Specify lower boundry of the period, where the last change occured.
+        @param year:
+        @param month:
+        @param day:
+        @param hour:
+        @param minute:
+        @param second:
+        @type year: int
+        @type month: int
+        @type day: int
+        @type hour: int
+        @type minute: int
+        @type second: int
+        """
         last_change = datetime.datetime(year, month, day, hour, minute, second)
         self.add_options({"before": last_change.strftime("%Y%m%d%H%M%S")})
 
     def last_change_after(self, year, month=1, day=1, hour=0, minute=0, second=0):
+        """
+        Specify higher boundry of the period, where the last change occured.
+        @param year:
+        @param month:
+        @param day:
+        @param hour:
+        @param minute:
+        @param second:
+        @type year: int
+        @type month: int
+        @type day: int
+        @type hour: int
+        @type minute: int
+        @type second: int
+        """
         last_change = datetime.datetime(year, month, day, hour, minute, second)
         self.add_options({"after": last_change.strftime("%Y%m%d%H%M%S")})
 
     def max_age(self, hours):
+        """
+        The maximum age of the site.
+        @param hours:
+        @type hours: int
+        """
         self.add_options({"max_age": str(hours)})
 
     def only_new(self):
+        """
+        show only items, which were created in the given period.
+        """
         self.add_options({"only_new": "1"})
 
-    def smaller_then(self, file_size):
-        self.add_options({"smaller": str(file_size)})
+    def smaller_then(self, page_size):
+        """
+        The maximum page_size.
+        @param page_size: Size in Bytes
+        @type page_size: int
+        """
+        self.add_options({"smaller": str(page_size)})
 
-    def larger_then(self, file_size):
-        self.add_options({"larger": str(file_size)})
+    def larger_then(self, page_size):
+        """
+        The minimum page_size.
+        @param page_size: Size in Bytes
+        @type page_size: int
+        """
+        self.add_options({"larger": str(page_size)})
 
     def get_wikidata(self):
+        """
+        Get the wikidata items number of the results.
+        """
         self.add_options({"get_q": "1"})
 
-    @staticmethod
-    def _construct_cat_string(cat_list):
+    def _construct_cat_string(self, cat_list):
         cat_string = ""
         i = 0
         for cat in cat_list:
@@ -167,8 +297,8 @@ class CatScan:
 
     def _construct_options(self):
         opt_string = ""
-        for key in self._options:
-            opt_string += ("&" + key + "=" + str(self._options[key]))
+        for key in self.options:
+            opt_string += ("&" + key + "=" + str(self.options[key]))
         return opt_string
 
     def _construct_string(self):
@@ -195,12 +325,17 @@ class CatScan:
         if len(self.outlinks["no"]) != 0:
             question_string += ("&outlinks_no=" + (self._construct_cat_string(self.outlinks["no"])))
         #rest of the options
-        if len(self._options) != 0:
+        if len(self.options) != 0:
             question_string += (self._construct_options())
         question_string += "&format=json&doit=1"
         return question_string
 
     def run(self):
+        """
+        Execute the search query und returns the results as a list.
+        @return: list of result dicionaries.
+        @rtype: list
+        """
         try:
             response = requests.get(url=self._construct_string(),
                                     headers=self.header, timeout=self.timeout)
