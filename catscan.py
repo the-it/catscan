@@ -154,20 +154,28 @@ class CatScan:
         """
         self.add_options({"depth":depth})
 
-    def add_positive_category(self, category):
+    def add_positive_category(self, category, depth=1):
         """
         Add category to the positive list.
         @param category: string with the category name
+        @param depth: search depth for this category
         @type category: str
+        @type depth: int
         """
+        if depth > 1:
+            category = category + "|{}".format(depth)
         self.categories["positive"].append(category)
 
-    def add_negative_category(self, category):
+    def add_negative_category(self, category, depth=1):
         """
         Add category to the negative list.
         @param category: string with the category name
+        @param depth: search depth for this category
         @type category: str
+        @type depth: int
         """
+        if depth > 1:
+            category = category + "|{}".format(depth)
         self.categories["negative"].append(category)
 
     def add_namespace(self, namespace):

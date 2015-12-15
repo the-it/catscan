@@ -1,7 +1,7 @@
 __author__ = 'Erik Sommer'
 
 import sys
-sys.path.append('../../')
+sys.path.append('../')
 from unittest import TestCase
 import httpretty
 from catscan import CatScan
@@ -19,10 +19,12 @@ class TestCatScan(TestCase):
     def test_add_categoy(self):
         self.catscan.add_positive_category("pos1")
         self.catscan.add_positive_category("pos2")
+        self.catscan.add_positive_category("pos3", 2)
         self.catscan.add_negative_category("neg1")
         self.catscan.add_negative_category("neg2")
-        self.assertEqual(["pos1", "pos2"], self.catscan.categories["positive"])
-        self.assertEqual(["neg1", "neg2"], self.catscan.categories["negative"])
+        self.catscan.add_negative_category("neg3", 3)
+        self.assertEqual(["pos1", "pos2", "pos3|2"], self.catscan.categories["positive"])
+        self.assertEqual(["neg1", "neg2", "neg3|3"], self.catscan.categories["negative"])
 
     def test_add_namespace(self):
         self.catscan.add_namespace(0)
