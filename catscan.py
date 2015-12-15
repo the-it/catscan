@@ -11,6 +11,18 @@ namespace_mapping = {"Article": 0,
                      "Benutzer Diskussion": 3,
                      "Wikisource": 4,
                      "Wikisource Diskussion": 5,
+                     "Wikipedia": 4,
+                     "Wikipedia Diskussion": 5,
+                     "Wikibooks": 4,
+                     "Wikibooks Diskussion": 5,
+                     "Wikiquote": 4,
+                     "Wikiquote Diskussion": 5,
+                     "Wikispecies": 4,
+                     "Wikispecies Diskussion": 5,
+                     "Wikinews": 4,
+                     "Wikinews Diskussion": 5,
+                     "Wikionary": 4,
+                     "Wikionary Diskussion": 5,
                      "Datei": 6,
                      "Datei Diskussion": 7,
                      "MediaWiki": 8,
@@ -21,13 +33,37 @@ namespace_mapping = {"Article": 0,
                      "Hilfe Diskussion": 13,
                      "Kategorie": 14,
                      "Kategorie Diskussion": 15,
+                     "Portal": 100,
+                     "Portal Diskussion": 101,
                      "Seite": 102,
                      "Seite Diskussion": 103,
+                     "Wahl": 102,
+                     "Wahl Diskussion": 103,
+                     "Meinungen": 102,
+                     "Meinungen Diskussion": 103,
+                     "Verzeichnis": 102,
+                     "Verzeichnis Diskussion": 103,
                      "Index": 104,
                      "Index Diskussion": 105,
+                     "Thesaurus": 104,
+                     "Thesaurus Diskussion": 105,
+                     "Kurs": 106,
+                     "Kurs Diskussion": 107,
+                     "Reim": 106,
+                     "Reim Diskussion": 107,
+                     "Projekt": 108,
+                     "Projekt Diskussion": 109,
+                     "Flexion": 108,
+                     "Flexion Diskussion": 109,
+                     "Education Program": 446,
+                     "Education Program Diskussion": 447,
                      "Modul": 828,
                      "Modul Diskussion": 829,
-                     }
+                     "Gadget ": 2300,
+                     "Gadget  Diskussion": 2301,
+                     "Gadget-Definition": 2302,
+                     "Gadget-Definition Diskussion": 2303,
+                     "Thema": 2600}
 
 
 def listify(x):
@@ -137,7 +173,8 @@ class CatScan:
     def add_namespace(self, namespace):
         """
         Add (a) namespace(s) to the options.
-        @param namespace: string or integer with a new namespace (a list of namespaces is possible)
+        @param namespace: string or integer with a new namespace (a list of namespaces is possible).
+                          Only german namespaces are supported yet.
         @type namespace: str|int|list
         """
         # is there a list to process or only a single instance
