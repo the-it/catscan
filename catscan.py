@@ -83,7 +83,7 @@ class CatScan:
     """
     def __init__(self):
         self.header = {'User-Agent': 'Python-urllib/3.1'}
-        self.base_address = "http://tools.wmflabs.org/catscan2/catscan2.php"
+        self.base_address = "http://tools.wmflabs.org/catscan3/catscan2.php"
         self.timeout = 30
         self.options = {}
         self.categories = {"positive": [], "negative": []}

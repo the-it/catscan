@@ -99,7 +99,7 @@ class TestCatScan(TestCase):
         self.catscan.add_no_template('no1')
         self.catscan.add_no_template('no2')
         self.assertEqual(str(self.catscan),
-                         'http://tools.wmflabs.org/catscan2/catscan2.php?language=de&project=wikisource&templates_yes=yes1%0D%0Ayes2&templates_any=any1%0D%0Aany2%0D%0Aany3&templates_no=no1%0D%0Ano2&format=json&doit=1')
+                         'http://tools.wmflabs.org/catscan3/catscan2.php?language=de&project=wikisource&templates_yes=yes1%0D%0Ayes2&templates_any=any1%0D%0Aany2%0D%0Aany3&templates_no=no1%0D%0Ano2&format=json&doit=1')
 
     def test_construct_outlinks(self):
         self.catscan.add_yes_outlink('yes1')
@@ -110,7 +110,7 @@ class TestCatScan(TestCase):
         self.catscan.add_no_outlink('no1')
         self.catscan.add_no_outlink('no2')
         self.assertEqual(str(self.catscan),
-                         'http://tools.wmflabs.org/catscan2/catscan2.php?language=de&project=wikisource&outlinks_yes=yes1%0D%0Ayes2&outlinks_any=any1%0D%0Aany2%0D%0Aany3&outlinks_no=no1%0D%0Ano2&format=json&doit=1')
+                         'http://tools.wmflabs.org/catscan3/catscan2.php?language=de&project=wikisource&outlinks_yes=yes1%0D%0Ayes2&outlinks_any=any1%0D%0Aany2%0D%0Aany3&outlinks_no=no1%0D%0Ano2&format=json&doit=1')
 
 
     def test_construct_options(self):
@@ -127,22 +127,22 @@ class TestCatScan(TestCase):
         # only a positive category
         self.catscan.add_positive_category("test")
         self.assertEqual(str(self.catscan),
-                         'http://tools.wmflabs.org/catscan2/catscan2.php?language=en&project=wikipedia&categories=test&format=json&doit=1')
+                         'http://tools.wmflabs.org/catscan3/catscan2.php?language=en&project=wikipedia&categories=test&format=json&doit=1')
         # only a negative category
         self.catscan.categories = {"positive": [], "negative": []}
         self.catscan.add_negative_category('test')
         self.assertEqual(str(self.catscan),
-                         'http://tools.wmflabs.org/catscan2/catscan2.php?language=en&project=wikipedia&negcats=test&format=json&doit=1')
+                         'http://tools.wmflabs.org/catscan3/catscan2.php?language=en&project=wikipedia&negcats=test&format=json&doit=1')
         # only a option
         self.catscan.categories = {"positive": [], "negative": []}
         self.catscan.add_options({"max_age": '10'})
         self.assertEqual(str(self.catscan),
-                         'http://tools.wmflabs.org/catscan2/catscan2.php?language=en&project=wikipedia&max_age=10&format=json&doit=1')
+                         'http://tools.wmflabs.org/catscan3/catscan2.php?language=en&project=wikipedia&max_age=10&format=json&doit=1')
 
     @httpretty.activate
     def test_do_positive(self):
         httpretty.register_uri(httpretty.GET,
-                               'http://tools.wmflabs.org/catscan2/catscan2.php?language=de&project=wikisource&categories=Autoren&get_q=1&show_redirects=no&ns[0]=1&max_age=48&format=json&doit=1',
+                               'http://tools.wmflabs.org/catscan3/catscan2.php?language=de&project=wikisource&categories=Autoren&get_q=1&show_redirects=no&ns[0]=1&max_age=48&format=json&doit=1',
                                status=200,
                                body='{"n":"result","a":{"querytime_sec":0.65997004508972},"*":[{"n":"combination","a":{"type":"subset","*":[{"n":"page","a":{"title":"Adam_Wolf","id":"26159","namespace":"0","len":"2122","touched":"20150702080634","q":"Q6245809","nstext":"(Article)"}},{"n":"page","a":{"title":"Victoria","id":"393175","namespace":"0","len":"1677","touched":"20150702092244","q":"Q9439","nstext":"(Article)"}}]}}]}',
                                content_type='application/json')
@@ -156,7 +156,7 @@ class TestCatScan(TestCase):
     @httpretty.activate
     def test_do_negative(self):
         httpretty.register_uri(httpretty.GET,
-                               'http://tools.wmflabs.org/catscan2/catscan2.php?language=de&project=wikisource&categories=Autoren&get_q=1&show_redirects=no&ns[0]=1&max_age=48&format=json&doit=1',
+                               'http://tools.wmflabs.org/catscan3/catscan2.php?language=de&project=wikisource&categories=Autoren&get_q=1&show_redirects=no&ns[0]=1&max_age=48&format=json&doit=1',
                                status=404)
         with self.assertRaises(ConnectionError):
             self.catscan.run()
