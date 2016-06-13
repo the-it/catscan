@@ -84,6 +84,12 @@ class TestCatScan(TestCase):
         self.petscan.set_regex_filter("abc")
         self.assertDictEqual({"regexp_filter": "abc"}, self.petscan.options)
 
+    def test_set_last_edits(self):
+        self.petscan.set_last_edit_bots(True)
+        self.petscan.set_last_edit_anons(False)
+        self.petscan.set_last_edit_flagged()
+        self.assertDictEqual({"edits[bots]": "yes", "edits[anons]": "no", "edits[flagged]": "yes"}, self.petscan.options)
+
     def test_construct_cat_string(self):
         self.petscan.add_positive_category("pos 1")
         self.petscan.add_positive_category("pos2")

@@ -4,6 +4,7 @@ import datetime
 import requests
 import json
 import re
+from urllib.parse import quote
 
 namespace_mapping = {"Article": 0,
                      "Diskussion": 1,
@@ -92,7 +93,7 @@ class CatScan:
         self.project = "wikisource"
 
     def __str__(self):
-        return self._construct_string()
+        return quote(self._construct_string(), safe='/&:=?')
 
     def set_language(self, lang:str):
         self.language = lang
@@ -197,6 +198,21 @@ class CatScan:
     def set_regex_filter(self, regex:str):
         self.add_options({"regexp_filter": regex})
 
+    def set_last_edit_bots(self, allowed = True):
+        self._set_last_edit("bots", allowed)
+
+    def set_last_edit_flagged(self, allowed = True):
+        self._set_last_edit("flagged", allowed)
+
+    def set_last_edit_anons(self, allowed = True):
+        self._set_last_edit("anons", allowed)
+
+    def _set_last_edit(self, type, allowed):
+        if allowed:
+            self.add_options({"edits[{}]".format(type): "yes"})
+        else:
+            self.add_options({"edits[{}]".format(type): "no"})
+
     def _construct_list_argument(self, cat_list):
         cat_string = ""
         i = 0
@@ -248,7 +264,7 @@ class CatScan:
         #rest of the options
         if len(self.options) != 0:
             question_string.append(self._construct_options())
-        question_string.append("&output_compatability=quick-intersection&format=json&doit=1")
+        question_string.append("&format=json&doit=1")
         return "".join(question_string)
 
     def run(self):
@@ -262,6 +278,6 @@ class CatScan:
                                     headers=self.header, timeout=self.timeout)
             response_byte = response.content
             response_dict = json.loads(response_byte.decode("utf8"))
-            return response_dict['pages']
+            return response_dict['*'][0]['a']['*']
         except Exception:
             raise ConnectionError
